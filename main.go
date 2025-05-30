@@ -27,7 +27,16 @@ func decodeImage(filename string) (image.Image, string, error) {
 func visualize(mask [][]int8) {
 	for y := range len(mask) {
 		var line = mask[y]
-		fmt.Println(line)
+		for x := 0; x < len(line); x++ {
+			if line[x] == 0 {
+				fmt.Print("⬜")
+			} else if line[x] == 1 {
+				fmt.Print("⬛")
+			} else {
+				fmt.Print("🟦")
+			}
+		}
+		fmt.Println("")
 	}
 }
 
