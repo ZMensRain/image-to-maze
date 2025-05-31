@@ -2,10 +2,13 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"image"
+	"image/color"
+	"image/draw"
 	_ "image/gif"
 	_ "image/jpeg"
-	_ "image/png"
+	"image/png"
 	"math/rand"
 	"os"
 )
@@ -120,4 +123,49 @@ func (g *Grid) iterateGeneration(from int) {
 		g.removeWall(newWall(from, neighbors[i]))
 		g.iterateGeneration(neighbors[i])
 	}
+}
+
+func (g *Grid) renderWalls() {
+	// creates the image and sets up some useful variables
+	width := int(g.width)*2 + 1
+	height := int(g.height)*2 + 1
+	area := image.Rect(0, 0, width, height)
+	img := image.NewRGBA(area)
+
+	// draws a border around the image
+	draw.Draw(img, img.Bounds(), image.Black, image.Pt(0, 0), draw.Src)
+	draw.Draw(img, image.Rect(1, 1, width-1, height-1), image.White, image.Pt(1, 1), draw.Src)
+
+	for i, exists := range g.cellWalls {
+		x1, y1 := g.indexToXY(i.cell1)
+		x2, y2 := g.indexToXY(i.cell2)
+		if !exists {
+			continue
+		}
+		transX1 := 2*x1 + 1
+		transY1 := 2*y1 + 1
+		transX2 := 2*x2 + 1
+		transY2 := 2*y2 + 1
+		if transY1 == transY2 {
+			img.SetRGBA((transX1+transX2)/2, transY1, color.RGBA{0, 0, 0, 255})
+			img.SetRGBA(((transX1 + transX2) / 2), transY1+1, color.RGBA{0, 0, 0, 255})
+			img.SetRGBA(((transX1 + transX2) / 2), transY1-1, color.RGBA{0, 0, 0, 255})
+		} else if transX1 == transX2 {
+			img.SetRGBA(transX1, (transY1+transY2)/2, color.RGBA{0, 0, 0, 255})
+			img.SetRGBA(transX1+1, ((transY1 + transY2) / 2), color.RGBA{0, 0, 0, 255})
+			img.SetRGBA(transX1-1, ((transY1 + transY2) / 2), color.RGBA{0, 0, 0, 255})
+		} else {
+			fmt.Println("invalid wall", i)
+			continue
+		}
+
+	}
+
+	//Writes the image to output.png
+	encoder, err := os.Create("./output.png")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	png.Encode(encoder, img)
 }
