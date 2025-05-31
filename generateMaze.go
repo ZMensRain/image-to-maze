@@ -6,6 +6,7 @@ import (
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
+	"math/rand"
 	"os"
 )
 
@@ -71,7 +72,11 @@ func (g *Grid) findStart() (index int, err error) {
 }
 
 func (g *Grid) generateMaze() {
-
+	start, err := g.findStart()
+	if err != nil {
+		return
+	}
+	g.iterateGeneration(start)
 }
 
 func (g *Grid) getNeighbors(from int, state int) []int {
@@ -105,4 +110,14 @@ func (g *Grid) getNeighbors(from int, state int) []int {
 	}
 
 	return neighbor
+}
+
+func (g *Grid) iterateGeneration(from int) {
+	re := func() []int { return g.getNeighbors(from, 0) }
+	g.updateState(from, 1)
+	for neighbors := re(); len(neighbors) != 0; neighbors = re() {
+		i := rand.Intn(len(neighbors))
+		g.removeWall(newWall(from, neighbors[i]))
+		g.iterateGeneration(neighbors[i])
+	}
 }
