@@ -64,22 +64,22 @@ func GridFromImage(img image.Image) *Grid {
 }
 
 // returns -1 if no start can be found
-func (g *Grid) findStart() (index int, err error) {
-	for i, state := range g.cellState {
+func (g *Grid) findStart(state int) (index int, err error) {
+	for i, cellState := range g.cellState {
 		//checks if the cell is in the mask
-		if state == 0 {
+		if cellState == state {
 			return i, nil
 		}
 	}
 	return -1, errors.New("no mask found")
 }
 
-func (g *Grid) generateMaze() {
-	start, err := g.findStart()
+func (g *Grid) generateMaze(state int) {
+	start, err := g.findStart(state)
 	if err != nil {
 		return
 	}
-	g.iterateGeneration(start)
+	g.iterateGeneration(start, state)
 }
 
 func (g *Grid) getNeighbors(from int, state int) []int {
@@ -115,13 +115,13 @@ func (g *Grid) getNeighbors(from int, state int) []int {
 	return neighbor
 }
 
-func (g *Grid) iterateGeneration(from int) {
-	re := func() []int { return g.getNeighbors(from, 0) }
+func (g *Grid) iterateGeneration(from, state int) {
+	re := func() []int { return g.getNeighbors(from, state) }
 	g.updateState(from, 1)
 	for neighbors := re(); len(neighbors) != 0; neighbors = re() {
 		i := rand.Intn(len(neighbors))
 		g.removeWall(newWall(from, neighbors[i]))
-		g.iterateGeneration(neighbors[i])
+		g.iterateGeneration(neighbors[i], state)
 	}
 }
 
