@@ -28,7 +28,7 @@ func DecodeImage(filename string) (image.Image, string, error) {
 func pixelToState(r, g, b, _a uint32) int {
 	// fmt.Println(r, g, b, _a)
 	if r == 65535 && g == 65535 && b == 65535 {
-		return 1
+		return 2
 	}
 	return 0
 }
