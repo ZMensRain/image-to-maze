@@ -65,16 +65,16 @@ func (plane *Plane) findAStart() (int, error) {
 func (plane *Plane) neighbors(index int) []int {
 	x, y := plane.getXY(index)
 	neighbors := []int{}
-	if x > 0 && !plane.nodes[index-1].visited {
+	if x > 0 && !plane.nodes[index-1].visited && !plane.nodes[index-1].outsideMask {
 		neighbors = append(neighbors, index-1)
 	}
-	if x < plane.width && !plane.nodes[index+1].visited {
+	if x < plane.width && !plane.nodes[index+1].visited && !plane.nodes[index+1].outsideMask {
 		neighbors = append(neighbors, index+1)
 	}
-	if y > 0 && !plane.nodes[index+plane.width].visited {
+	if y > 0 && !plane.nodes[index+plane.width].visited && !plane.nodes[index+plane.width].outsideMask {
 		neighbors = append(neighbors, index-plane.width)
 	}
-	if y < plane.height && !plane.nodes[index-plane.width].visited {
+	if y < plane.height && !plane.nodes[index-plane.width].visited && !plane.nodes[index-plane.width].outsideMask {
 		neighbors = append(neighbors, index+plane.width)
 	}
 	return neighbors
