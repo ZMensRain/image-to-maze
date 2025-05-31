@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -56,6 +57,17 @@ func GridFromImage(img image.Image) *Grid {
 	}
 
 	return grid
+}
+
+// returns -1 if no start can be found
+func (g *Grid) findStart() (index int, err error) {
+	for i, state := range g.cellState {
+		//checks if the cell is in the mask
+		if state == 0 {
+			return i, nil
+		}
+	}
+	return -1, errors.New("no mask found")
 }
 
 func (g *Grid) generateMaze() {
