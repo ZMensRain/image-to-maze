@@ -73,3 +73,36 @@ func (g *Grid) findStart() (index int, err error) {
 func (g *Grid) generateMaze() {
 
 }
+
+func (g *Grid) getNeighbors(from int, state int) []int {
+	x := from % int(g.width)
+	y := (from - x) / int(g.width)
+
+	neighbor := []int{}
+
+	// left neighbor
+	var index = from - 1
+	if x > 0 && g.cellState[index] == state {
+		neighbor = append(neighbor, index)
+	}
+
+	// top neighbor
+	index = x + (y-1)*int(g.width)
+	if y > 0 && g.cellState[index] == state {
+		neighbor = append(neighbor, index)
+	}
+
+	// right neighbor
+	index = from + 1
+	if x < int(g.width)-1 && g.cellState[index] == state {
+		neighbor = append(neighbor, index)
+	}
+
+	// bottom neighbor
+	index = x + (y+1)*int(g.width)
+	if y < int(g.height)-1 && g.cellState[index] == state {
+		neighbor = append(neighbor, index)
+	}
+
+	return neighbor
+}
