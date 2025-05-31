@@ -44,3 +44,8 @@ func newGrid(width, height uint32) *Grid {
 	g := Grid{cellState: make(map[int]int, total), cellWalls: make(map[Wall]bool), width: width, height: height}
 	return &g
 }
+func (g *Grid) indexToXY(index int) (x, y int) {
+	x = index % int(g.width)
+	y = (index - x) / int(g.width)
+	return x, y
+}
