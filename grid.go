@@ -7,7 +7,12 @@ type Wall struct {
 }
 
 func newWall(cell1, cell2 int) Wall {
-	return Wall{cell1: cell1, cell2: cell2}
+	if cell1 < cell2 {
+		return Wall{cell1: cell1, cell2: cell2}
+	} else {
+		return Wall{cell1: cell2, cell2: cell1}
+	}
+
 }
 
 type Grid struct {
