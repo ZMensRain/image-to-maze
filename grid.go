@@ -16,6 +16,8 @@ type Grid struct {
 	// 2:outside of mask
 	cellState map[int]int
 	cellWalls map[Wall]bool
+	width     uint32
+	height    uint32
 }
 
 func (grid *Grid) length() int {
@@ -34,6 +36,6 @@ func (grid *Grid) addWall(wall Wall) {
 }
 func newGrid(width, height uint32) *Grid {
 	total := width * height
-	g := Grid{cellState: make(map[int]int, total), cellWalls: make(map[Wall]bool)}
+	g := Grid{cellState: make(map[int]int, total), cellWalls: make(map[Wall]bool), width: width, height: height}
 	return &g
 }
