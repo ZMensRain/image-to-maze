@@ -1,10 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-
-	img, _, err := DecodeImage("./input.png")
+	input, output, background, foreground := handleArgs()
+	img, _, err := DecodeImage(*input)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -16,5 +18,5 @@ func main() {
 		grid.generateMaze(i)
 	}
 	fmt.Println("Generation Finished")
-	grid.renderWalls()
+	grid.renderWalls(*output, *background, *foreground)
 }

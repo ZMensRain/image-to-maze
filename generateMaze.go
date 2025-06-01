@@ -125,7 +125,7 @@ func (g *Grid) iterateGeneration(from, state int) {
 	}
 }
 
-func (g *Grid) renderWalls() {
+func (g *Grid) renderWalls(path string, background color.RGBA, foreground color.RGBA) {
 	// creates the image and sets up some useful variables
 	width := int(g.width)*2 + 1
 	height := int(g.height)*2 + 1
@@ -133,8 +133,8 @@ func (g *Grid) renderWalls() {
 	img := image.NewRGBA(area)
 
 	// draws a border around the image
-	draw.Draw(img, img.Bounds(), image.Black, image.Pt(0, 0), draw.Src)
-	draw.Draw(img, image.Rect(1, 1, width-1, height-1), image.White, image.Pt(1, 1), draw.Src)
+	draw.Draw(img, img.Bounds(), image.NewUniform(foreground), image.Pt(0, 0), draw.Src)
+	draw.Draw(img, image.Rect(1, 1, width-1, height-1), image.NewUniform(background), image.Pt(1, 1), draw.Src)
 
 	for i, exists := range g.cellWalls {
 		x1, y1 := g.indexToXY(i.cell1)
@@ -147,13 +147,13 @@ func (g *Grid) renderWalls() {
 		transX2 := 2*x2 + 1
 		transY2 := 2*y2 + 1
 		if transY1 == transY2 {
-			img.SetRGBA((transX1+transX2)/2, transY1, color.RGBA{0, 0, 0, 255})
-			img.SetRGBA(((transX1 + transX2) / 2), transY1+1, color.RGBA{0, 0, 0, 255})
-			img.SetRGBA(((transX1 + transX2) / 2), transY1-1, color.RGBA{0, 0, 0, 255})
+			img.SetRGBA((transX1+transX2)/2, transY1, foreground)
+			img.SetRGBA(((transX1 + transX2) / 2), transY1+1, foreground)
+			img.SetRGBA(((transX1 + transX2) / 2), transY1-1, foreground)
 		} else if transX1 == transX2 {
-			img.SetRGBA(transX1, (transY1+transY2)/2, color.RGBA{0, 0, 0, 255})
-			img.SetRGBA(transX1+1, ((transY1 + transY2) / 2), color.RGBA{0, 0, 0, 255})
-			img.SetRGBA(transX1-1, ((transY1 + transY2) / 2), color.RGBA{0, 0, 0, 255})
+			img.SetRGBA(transX1, (transY1+transY2)/2, foreground)
+			img.SetRGBA(transX1+1, ((transY1 + transY2) / 2), foreground)
+			img.SetRGBA(transX1-1, ((transY1 + transY2) / 2), foreground)
 		} else {
 			fmt.Println("invalid wall", i)
 			continue
@@ -162,7 +162,7 @@ func (g *Grid) renderWalls() {
 	}
 
 	//Writes the image to output.png
-	encoder, err := os.Create("./output.png")
+	encoder, err := os.Create(path)
 	if err != nil {
 		fmt.Println(err)
 		return
