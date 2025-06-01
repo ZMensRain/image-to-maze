@@ -49,3 +49,12 @@ func (g *Grid) indexToXY(index int) (x, y int) {
 	y = (index - x) / int(g.width)
 	return x, y
 }
+
+func (g *Grid) unvisited() int {
+	for _, j := range g.cellState {
+		if j != 1 {
+			return j
+		}
+	}
+	return -1
+}
