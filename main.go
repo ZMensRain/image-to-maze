@@ -2,11 +2,17 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 )
 
+var backgroundColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
+var foregroundColor = color.RGBA{R: 0, G: 0, B: 0, A: 0}
+var inputPath = "./input.png"
+var outputPath = "./output.png"
+
 func main() {
-	input, output, background, foreground := handleArgs()
-	img, _, err := DecodeImage(*input)
+	handleArgs()
+	img, _, err := DecodeImage(inputPath)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -18,5 +24,5 @@ func main() {
 		grid.generateMaze(i)
 	}
 	fmt.Println("Generation Finished")
-	grid.renderWalls(*output, *background, *foreground)
+	grid.renderWalls(outputPath, backgroundColor, foregroundColor)
 }

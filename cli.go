@@ -25,17 +25,17 @@ func ParseHexColor(s string) (c color.RGBA, err error) {
 	return
 }
 
-func handleArgs() (*string, *string, *color.RGBA, *color.RGBA) {
+func handleArgs() {
 
-	input := flag.String("input", "./input.png", "path to the input mask must be a png")
-	output := flag.String("output", "./output.png", "path to the output image must be a png")
-	backgroundColor := flag.String("background-color", "#ffffff", "maze -background-color=\"#ffffff\"")
-	foregroundColor := flag.String("foreground-color", "#000000", "maze -background-color=\"#000000\"")
+	inputPath = *flag.String("input", "./input.png", "path to the input mask must be a png")
+	outputPath = *flag.String("output", "./output.png", "path to the output image must be a png")
+	backgroundHex := flag.String("background-color", "#ffffff", "maze -background-color=\"#ffffff\"")
+	foregroundHex := flag.String("foreground-color", "#000000", "maze -background-color=\"#000000\"")
 
 	flag.Parse()
 
-	parsedBackground, backErr := ParseHexColor(*backgroundColor)
-	parsedForeground, foreErr := ParseHexColor(*foregroundColor)
+	parsedBackground, backErr := ParseHexColor(*backgroundHex)
+	parsedForeground, foreErr := ParseHexColor(*foregroundHex)
 
 	if backErr != nil {
 		fmt.Println("Invalid Background color")
@@ -46,5 +46,6 @@ func handleArgs() (*string, *string, *color.RGBA, *color.RGBA) {
 		os.Exit(2)
 	}
 
-	return input, output, &parsedBackground, &parsedForeground
+	backgroundColor = parsedBackground
+	foregroundColor = parsedForeground
 }
