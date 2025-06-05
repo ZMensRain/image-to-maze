@@ -25,10 +25,6 @@ type Grid struct {
 	height    uint32
 }
 
-func (grid *Grid) length() int {
-	return len(grid.cellState)
-}
-
 func (grid *Grid) updateState(cell, state int) {
 	grid.cellState[cell] = state
 }
