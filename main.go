@@ -20,7 +20,7 @@ func main() {
 	fmt.Println("creating the grid based on your image")
 	grid := GridFromImage(img)
 	fmt.Println("Generation Started")
-	for i := grid.unvisited(); i != -1; i = grid.unvisited() {
+	for i := grid.findUnvisited(); i != -1; i = grid.findUnvisited() {
 		grid.generateMaze(i)
 	}
 	fmt.Println("Generation Finished")

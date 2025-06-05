@@ -46,7 +46,7 @@ func (g *Grid) indexToXY(index int) (x, y int) {
 	return x, y
 }
 
-func (g *Grid) unvisited() int {
+func (g *Grid) findUnvisited() int {
 	for _, j := range g.cellState {
 		if j != 1 {
 			return j
