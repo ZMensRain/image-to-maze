@@ -6,6 +6,8 @@ type Wall struct {
 	cell2 int
 }
 
+// creates a wall where the smallest index is set as the first.
+// This is done so that walls are comparable
 func newWall(cell1, cell2 int) Wall {
 	if cell1 < cell2 {
 		return Wall{cell1: cell1, cell2: cell2}
@@ -46,6 +48,7 @@ func (g *Grid) indexToXY(index int) (x, y int) {
 	return x, y
 }
 
+// returns index of an unvisited area or -1 if none is found
 func (g *Grid) findUnvisited() int {
 	for _, j := range g.cellState {
 		if j != 1 {
