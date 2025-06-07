@@ -46,17 +46,6 @@ func GridFromImage(img image.Image) *Grid {
 			// sets state
 			r, g, b, a := img.At(x, y).RGBA()
 			grid.updateState(index, pixelToState(r, g, b, a))
-
-			// sets walls
-			if y < size.Dy()-1 {
-				//May have issue here where dy is 1 bigger than it should be
-				grid.addWall(newWall(index, index+size.Dy()))
-			}
-
-			if x < size.Dx()-1 {
-				//May have issue here where dy is 1 bigger than it should be
-				grid.addWall(newWall(index, index+1))
-			}
 		}
 	}
 
@@ -134,11 +123,10 @@ func (g *Grid) renderWalls(path string, background color.RGBA, foreground color.
 
 	// draws a border around the image
 	draw.Draw(img, img.Bounds(), image.NewUniform(foreground), image.Pt(0, 0), draw.Src)
-	draw.Draw(img, image.Rect(1, 1, width-1, height-1), image.NewUniform(background), image.Pt(1, 1), draw.Src)
-
-	for i, exists := range g.cellWalls {
+	for i, exists := range g.openWalls {
 		x1, y1 := g.indexToXY(i.cell1)
 		x2, y2 := g.indexToXY(i.cell2)
+		// filters out closed walls
 		if !exists {
 			continue
 		}
@@ -147,13 +135,15 @@ func (g *Grid) renderWalls(path string, background color.RGBA, foreground color.
 		transX2 := 2*x2 + 1
 		transY2 := 2*y2 + 1
 		if transY1 == transY2 {
-			img.SetRGBA((transX1+transX2)/2, transY1, foreground)
-			img.SetRGBA(((transX1 + transX2) / 2), transY1+1, foreground)
-			img.SetRGBA(((transX1 + transX2) / 2), transY1-1, foreground)
+			img.SetRGBA(transX1, transY1, background)
+			img.SetRGBA(transX2, transY1, background)
+			img.SetRGBA(((transX1 + transX2) / 2), transY1, background)
+
 		} else if transX1 == transX2 {
-			img.SetRGBA(transX1, (transY1+transY2)/2, foreground)
-			img.SetRGBA(transX1+1, ((transY1 + transY2) / 2), foreground)
-			img.SetRGBA(transX1-1, ((transY1 + transY2) / 2), foreground)
+			img.SetRGBA(transX1, transY1, background)
+			img.SetRGBA(transX1, transY2, background)
+			img.SetRGBA(transX1, ((transY1 + transY2) / 2), background)
+
 		} else {
 			fmt.Println("invalid wall", i)
 			continue
