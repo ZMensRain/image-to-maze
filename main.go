@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"image/color"
+
+	"github.com/ZMensRain/image-to-maze/core"
+	"github.com/ZMensRain/image-to-maze/utils"
 )
 
 var backgroundColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
@@ -12,17 +15,17 @@ var outputPath = "./output.png"
 
 func main() {
 	handleArgs()
-	img, _, err := DecodeImage(inputPath)
+	img, _, err := utils.DecodeImage(inputPath)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("creating the grid based on your image")
-	grid := GridFromImage(img)
+	grid := core.GridFromImage(img)
 	fmt.Println("Generation Started")
-	for i := grid.findUnvisited(); i != -1; i = grid.findUnvisited() {
-		grid.generateMaze(i)
+	for i := grid.FindUnvisited(); i != -1; i = grid.FindUnvisited() {
+		grid.GenerateMaze(i)
 	}
 	fmt.Println("Generation Finished")
-	grid.renderWalls(outputPath, backgroundColor, foregroundColor)
+	utils.SaveMazeToFile(grid, outputPath, foregroundColor, backgroundColor)
 }
