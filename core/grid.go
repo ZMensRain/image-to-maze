@@ -157,7 +157,7 @@ func (g *Grid) RenderWalls(background, foreground color.RGBA) *image.RGBA {
 func PixelToState(pixel color.Color) int {
 	r, g, b, _ := pixel.RGBA()
 	// fmt.Println(r, g, b, _a)
-	if r == 65535 && g == 65535 && b == 65535 {
+	if r >= 32_766 && g >= 32_766 && b >= 32_766 {
 		return 2
 	}
 	return 0
